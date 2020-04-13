@@ -1,0 +1,90 @@
+<div class="animated fadeIn">
+
+  <div class="dashboard-header">
+    <div class="row">
+      <div class="col-md-12">
+        <strong>Transaction Status Overview</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-4">
+      <div class="card text-white bg-warning">
+        <div class="card-body pb-0">
+          <!-- <button type="button" class="btn btn-transparent p-0 float-right">
+            <i class="icon-location-pin"></i>
+          </button> -->
+          <div class="text-value">9823</div>
+          <div class="text-value">Total Transactions</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+          <canvas baseChart class="chart" [datasets]="lineChart2Data" [labels]="lineChart2Labels"
+            [options]="lineChart2Options" [colors]="lineChart2Colours" [legend]="lineChart2Legend"
+            [chartType]="lineChart2Type"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+      <div class="card text-white bg-success">
+        <div class="card-body pb-0">
+          <div class="text-value">125,421</div>
+          <div class="text-value"> Sent Transactions</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+          <canvas baseChart class="chart" [datasets]="lineChart2Data" [labels]="lineChart2Labels"
+            [options]="lineChart2Options" [colors]="lineChart2Colours" [legend]="lineChart2Legend"
+            [chartType]="lineChart2Type"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-4">
+      <div class="card text-white bg-danger">
+        <div class="card-body pb-0">
+          <div class="text-value">421</div>
+          <div class="text-value"> Failed Transactions</div>
+        </div>
+        <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
+          <canvas baseChart class="chart" [datasets]="lineChart2Data" [labels]="lineChart2Labels"
+            [options]="lineChart2Options" [colors]="lineChart2Colours" [legend]="lineChart2Legend"
+            [chartType]="lineChart2Type"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="dashboard-header">
+      <div class="row">
+        <div class="col-md-12">
+          <strong> Status Overview</strong>
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-bordered table-hover table-md z-depth-1">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Status</th>
+          <th scope="col">Records</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

@@ -1,0 +1,61 @@
+<!-- <div class="animated fadeIn">
+
+  </div> -->
+
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-6">
+        <strong>SMS Configuration</strong>
+      </div>
+      <div class="col-md-6">
+        <!-- <button type="button" class="btn btn-primary" (click)="enableForm()">Enable Form</button>
+        <button type="button" class="btn btn-secondary" (click)="disableForm()">Disable Form</button> -->
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card-body">
+    <div action="" method="post" class="form-horizontal">
+      <div class="form-group row">
+        <strong class="col-md-2">SMS Server Name </strong>
+        <div class="col-md-9">
+          <input type="text" [readonly]="!configurationField" class="form-control" placeholder="Enter Email"
+            value="Apache Http" autocomplete="email">
+        </div>
+      </div>
+      <div class="form-group row">
+        <strong class="col-md-2">Gateway URL</strong>
+        <div class="col-md-9">
+          <input type="text" [readonly]="!configurationField" class="form-control" placeholder="Enter domain"
+            value="192.168.10.10" autocomplete="current-password">
+        </div>
+      </div>
+      <div class="form-group row">
+        <strong class="col-md-2">SMS Server User</strong>
+        <div class="col-md-9">
+          <input type="text" [readonly]="!configurationField" class="form-control" placeholder="Enter user"
+            value="Apache Http" autocomplete="current-password">
+        </div>
+      </div>
+      <div class="form-group row">
+        <strong class="col-md-2">SMS Server Password</strong>
+        <div class="col-md-9">
+          <input type="text" [readonly]="!configurationField" class="form-control" value="@password"
+            placeholder="Enter Server Password" autocomplete="current-password">
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-2">
+          <button class="btn btn-primary"> Send Test SMS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <button type="submit" class="btn btn-success" (click)="enableForm()"
+      id="button"><strong>{{buttonLabel}}</strong></button>
+    <button class="btn btn-danger pull-right" (click)="cancelModify()"><strong>Cancel</strong></button>
+  </div>
+</div>

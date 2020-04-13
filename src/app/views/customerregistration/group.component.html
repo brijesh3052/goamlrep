@@ -1,0 +1,241 @@
+<div *ngIf="userRoleQueryBlock">
+  <div class="card">
+    <div class="card-header"><strong>Search - Customer-Group</strong>
+      <button type="button" class="btn btn-sm pull-right" (click)="isCollapsed = !isCollapsed">
+        <i class="fa fa-chevron-circle-down" *ngIf="isCollapsed === false"> Collapse</i>
+        <i class="fa fa-chevron-circle-up" *ngIf="isCollapsed === true"> Expand</i>
+      </button>
+    </div>
+    <div class="card-body" [collapse]="isCollapsed">
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Group Name</strong>
+            <div class="form-group col-sm-8">
+              <input type="text" class="form-control" #rolename id="userrole.rolename" value="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Group</strong>
+            <div class="col-md-6">
+              <select class="form-control" #rolegroup id="userrole.rolegroup" name="Role Group">
+                <option value=""></option>
+                <option value="admin">Admin</option>
+                <option value="staff">Staff</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Status</strong>
+            <div class="col-md-6">
+              <select class="form-control" #userstatus id="userrole.rolestatus" name="Role Status">
+                <option value=""></option>
+                <option value="new">New</option>
+                <option value="active">Active</option>
+                <option value="pending approval">Pending Approval</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer" [collapse]="isCollapsed">
+      <button type="submit" class="btn col-1 btn-success" (click)="searchQuery(rolename, rolegroup, userstatus)">
+        <i class="fa fa-search"></i>
+        <strong> &nbsp; Query </strong>
+      </button>
+      <button class="btn col-1 btn-danger pull-right" type="reset" (click)="resetQuery()">
+        <i class="fa fa-ban"></i>
+        <strong> &nbsp; Reset</strong>
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-header">
+          <strong>Result - Group</strong>
+          <select class="col-md-1 float-right" [(ngModel)]="recordsPerPage" id="recordperpage">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <strong class="pull-right">Records per page &nbsp; </strong>
+        </div>
+
+        <div class="card-body">
+          <div class="row">
+            <div class="form-group col-md-12">
+              <button class="btn btn-md btn-primary" id="btnRoleNew" (click)="newGroup()">
+                <i class="fa fa-plus"></i>
+                <strong> &nbsp; New Group </strong>
+              </button>
+              <button class="btn btn-md btn-outline-secondary" id="btnRoleDelete" disabled (click)="deleteGroup()">
+                <i class="fa fa-close"></i>
+                <strong> &nbsp; Delete </strong>
+              </button>
+              <button class="btn btn-md btn-outline-secondary" id="btnRoleModify" disabled (click)="modifyGroup()">
+                <i class="fa fa-pencil-square-o"></i>
+                <strong> &nbsp; Modify </strong>
+              </button>
+              <button class="btn btn-md btn-outline-secondary" id="btnRoleApprove" disabled (click)="approveGroup()">
+                <i class="fa fa-check-square-o"></i>
+                <strong> &nbsp; Approve </strong>
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-hover table-md z-depth-1">
+            <thead class="thead-dark">
+              <tr>
+                <th style="width: 3%"></th>
+                <th scope="col" sortable="name" (sort)="onSort($event)" style="width: 40%">Group Name</th>
+                <th scope="col" sortable="role" (sort)="onSort($event)" style="width: 30%">Role</th>
+                <th scope="col" sortable="status" (sort)="onSort($event)">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let role of queryRoleList | paginate: {itemsPerPage: recordsPerPage, currentPage: config.currentPage}">
+                <td><input type="radio" name="selectrole" (click)="rowSelected(role)"></td>
+                <td>{{role.roleName}}</td>
+                <td>{{role.roleGroup}}</td>
+                <td>
+                  <span class="badge badge-primary" *ngIf="role.status === 'new'">{{role.status}}</span>
+                  <span class="badge badge-success" *ngIf="role.status === 'active'">{{role.status}}</span>
+                  <span class="badge badge-warning" *ngIf="role.status === 'pending approval'">{{role.status}}</span>
+                  <span class="badge badge-danger" *ngIf="role.status === 'locked'">{{role.status}}</span>
+                  <span class="badge badge-secondary" *ngIf="role.status === 'closed'">{{role.status}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <pagination-template #p="paginationApi" [id]="config.id" (pageChange)="config.currentPage = $event">
+            <nav>
+              <ul class="pagination noborder">
+                <li class="page-item" [class.disabled]="p.isFirstPage()">
+                  <a class="page-link" href="javascript:void(0)" (click)="p.previous()">Previous</a>
+                </li>
+                <li class="page-item" *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value">
+                  <a class="page-link" href="javascript:void(0)" (click)="p.setCurrent(page.value)"
+                    *ngIf="p.getCurrent() !== page.value">{{ page.label }}</a>
+                  <a class="page-link active" href="javascript:void(0)" *ngIf="p.getCurrent() === page.value">
+                    {{ page.label }}
+                  </a>
+                </li>
+                <li class="page-item" [class.disabled]="p.isLastPage()">
+                  <a class="page-link" href="javascript:void(0)" (click)="p.next()">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </pagination-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="col-sm" *ngIf="userRoleDetailBlock">
+  <div class="card">
+    <div class="card-header">
+      <strong id="userdet.header">Group Managment</strong>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Group Name</strong>
+            <div class="form-group col-sm-8">
+              <input type="text" class="form-control" id="userroledet.username">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Group Status</strong>
+            <div class="form-group col-sm-6">
+              <select class="form-control" id="userroledet.userstatus">
+                <option></option>
+                <option>Lock</option>
+                <option>Close</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-8">
+
+          <button class="btn btn-md btn-primary" id="btnAddScreenRole" (click)="addScreenRole()">
+            <i class="fa fa-plus"></i>
+            <strong> &nbsp; Add Customer </strong>
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-8">
+          <table class="table table-bordered table-hover table-md z-depth-1">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" sortable="user" style="width: fit-content">Customer Id</th>
+                <th scope="col" sortable="user" style="width: fit-content">Account Number</th>
+                <th scope="col" sortable="role" style="width: 5%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="userdet.addroleblock" *ngFor="let screenid of listScreenRole; let i = index;">
+                <td>
+                  <select class="form-control" id="userdet.userstatus" [(ngModel)]="listScreenRole[i].screenName">
+                    <option *ngFor="let screenname of listScreenName" value="{{screenname.name}}">{{screenname.name}}
+                    </option>
+                  </select>
+                </td>
+                <td>
+                  <select class="form-control" id="userdet.userstatus" [(ngModel)]="listScreenRole[i].screenName">
+                    <option *ngFor="let screenname of listScreenName" value="{{screenname.name}}">{{screenname.name}}
+                    </option>
+                  </select>
+                </td>           
+                <td>
+                  <button class="btn btn-md" id="btnDeleteScreenRole" href="javascript:void(0)"
+                    (click)="deleteScreenRole(screenid)">
+                    <i class="fa fa-close"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button class="btn btn-success"><strong>Submit</strong></button>
+      <button class="btn btn-danger pull-right" (click)="canceluser()"><strong>Cancel</strong></button>
+    </div>
+  </div>
+</div>

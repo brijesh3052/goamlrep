@@ -1,0 +1,470 @@
+<div *ngIf="customerQueryBlock">
+  <div class="card">
+    <div class="card-header"><strong>Customer Search</strong>
+      <button type="button" class="btn btn-sm pull-right" (click)="isCollapsed = !isCollapsed">
+        <i class="fa fa-chevron-circle-down" *ngIf="isCollapsed === false"> Collapse</i>
+        <i class="fa fa-chevron-circle-up" *ngIf="isCollapsed === true"> Expand</i>
+      </button>
+    </div>
+    <div class="card-body" [collapse]="isCollapsed">
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Customer Id</strong>
+            <div class="form-group col-sm-8">
+              <input type="text" class="form-control" #userid id="userid" value="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Customer Name</strong>
+            <div class="form-group col-sm-8">
+              <input type="text" class="form-control" #username id="username" value="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Status</strong>
+            <div class="col-md-6">
+              <select class="form-control" #userstatus id="userstatus" name="User Status">
+                <option value=""></option>
+                <option value="new">New</option>
+                <option value="active">Active</option>
+                <option value="pending approval">Pending Approval</option>
+                <option value="locked">Locked</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer" [collapse]="isCollapsed">
+      <button type="submit" class="btn col-1 btn-success" (click)="searchQuery(userid, username, userstatus)">
+        <i class="fa fa-search"></i>
+        <strong> &nbsp; Query </strong>
+      </button>
+      <button class="btn col-1 btn-danger pull-right" type="reset" (click)="resetQuery()">
+        <i class="fa fa-ban"></i>
+        <strong> &nbsp; Reset</strong>
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+
+        <div class="card-header">
+          <strong>Customer Results</strong>
+          <select class="col-md-1 float-right" [(ngModel)]="recordsPerPage" id="recordperpage">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <strong class="pull-right">Records per page &nbsp; </strong>
+        </div>
+
+        <div class="card-body">
+          <div class="row">
+            <div class="form-group col-md-12">
+              <button class="btn btn-md btn-primary" id="btnUserNew" (click)="newCustomer()">
+                <i class="fa fa-plus"></i>
+                <strong> &nbsp; New Customer </strong>
+              </button>
+              <button class="btn btn-md btn-outline-secondary" id="btnUserDelete" disabled (click)="deleteCustomer()">
+                <i class="fa fa-close"></i>
+                <strong> &nbsp; Delete </strong>
+              </button>
+              <button class="btn btn-md btn-outline-secondary" id="btnUserModify" disabled (click)="modifyCustomer()">
+                <i class="fa fa-pencil-square-o"></i>
+                <strong> &nbsp; Modify </strong>
+              </button>
+              <button class="btn btn-md btn-outline-secondary" id="btnUserApprove" disabled (click)="approveCustomer()">
+                <i class="fa fa-check-square-o"></i>
+                <strong> &nbsp; Approve </strong>
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-hover table-md z-depth-1">
+            <thead class="thead-dark">
+              <tr>
+                <!-- <th *ngFor="let head of headElements; let i = index" aria-controls="tableSort" scope="col"
+                  [mdbTableSort]="elements" [sortBy]="headElements[i]">{{head | titlecase}}
+                  <mdb-icon fas icon="sort"></mdb-icon>
+                </th> -->
+                <th style="width: 3%"></th>
+                <th scope="col" sortable="user" (sort)="onSort($event)" style="width: 10%">Customer Id</th>
+                <th scope="col" sortable="name" (sort)="onSort($event)" style="width: 40%">Customer Name</th>
+                <th scope="col" sortable="role" (sort)="onSort($event)" style="width: 30%">Role</th>
+                <th scope="col" sortable="status" (sort)="onSort($event)">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let user of querycustList | paginate: {itemsPerPage: recordsPerPage, currentPage: config.currentPage}">
+                <td><input type="radio" name="selectuser" (click)="rowSelected(user)"></td>
+                <td>{{user.userId}}</td>
+                <td>{{user.userName}}</td>
+                <td>{{user.role}}</td>
+                <td>
+                  <span class="badge badge-primary" *ngIf="user.status === 'new'">{{user.status}}</span>
+                  <span class="badge badge-success" *ngIf="user.status === 'active'">{{user.status}}</span>
+                  <span class="badge badge-warning" *ngIf="user.status === 'pending approval'">{{user.status}}</span>
+                  <span class="badge badge-danger" *ngIf="user.status === 'locked'">{{user.status}}</span>
+                  <span class="badge badge-secondary" *ngIf="user.status === 'closed'">{{user.status}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <pagination-template #p="paginationApi" [id]="config.id" (pageChange)="config.currentPage = $event">
+            <nav>
+              <ul class="pagination noborder">
+                <li class="page-item" [class.disabled]="p.isFirstPage()">
+                  <a class="page-link" href="javascript:void(0)" (click)="p.previous()">Previous</a>
+                </li>
+                <li class="page-item" *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value">
+                  <a class="page-link" href="javascript:void(0)" (click)="p.setCurrent(page.value)"
+                    *ngIf="p.getCurrent() !== page.value">{{ page.label }}</a>
+                  <a class="page-link active" href="javascript:void(0)" *ngIf="p.getCurrent() === page.value">
+                    {{ page.label }}
+                  </a>
+                </li>
+                <li class="page-item" [class.disabled]="p.isLastPage()">
+                  <a class="page-link" href="javascript:void(0)" (click)="p.next()">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </pagination-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- *ngIf="customerDetailBlock" -->
+<div class="col-sm" *ngIf="customerDetailBlock">
+  <div class="card">
+    <div class="card-header">
+      <strong id="userdet.header">Customer Registration</strong>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Customer Id</strong>
+            <div class="form-group col-sm-7">
+              <div class="input-group">
+                <input id="userdet.userid" class="form-control" size="16" type="text">
+                <span class="input-group-append">
+                  <button class="btn btn-secondary dropdown-toggle" type="button"><i class="fa fa-search"></i></button>
+                </span>
+                <!-- <span>rtrtrtrt</span> -->
+              </div>
+             </div>            
+          </div>
+        </div>
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Customer Name</strong>
+            <div class="form-group col-sm-7">
+              <input type="text" class="form-control" id="userdet.userid">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Account Number</strong>
+            <div class="form-group col-sm-7">
+              <div class="input-group">
+                <input id="userdet.userid" class="form-control" size="16" type="text">
+                <span class="input-group-append">
+                  <button class="btn btn-secondary dropdown-toggle" type="button"><i class="fa fa-search"></i></button>
+                </span>
+              </div>
+            </div>
+            <!-- <button class="form-group" style="margin-left: inherit;"><i class="fa fa-search"></i></button> -->
+          </div>
+        </div>
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Account Currency</strong>
+            <div class="form-group col-sm-7">
+              <input type="text" class="form-control" id="userdet.username">
+            </div>
+          </div>
+        </div>  
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">SMS Notification</strong>
+            <div class="form-group col-sm-7">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input type="checkbox" id="checked" class="switch-input"  (click)="smsNotificationSwitch()">
+                <span class="switch-slider" data-checked="✓" data-unchecked="✕"></span>
+              </label>  
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Primary Mobile No</strong>
+            <div class="form-group col-sm-7">
+              <input type="password" [readonly]="!smsNotifications" class="form-control" id="userdet.reenterpassword">
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Secondary Mobile No</strong>
+            <div class="form-group col-sm-7">
+              <input type="password" [readonly]="!smsNotifications" class="form-control" id="userdet.reenterpassword">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Email Notification</strong>
+            <div class="form-group col-sm-7">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input type="checkbox" id="checked" class="switch-input"  (click)="emailNotification()">
+                <span class="switch-slider" data-checked="✓" data-unchecked="✕"></span>
+              </label>  
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Email Notification</strong>
+            <div class="form-group col-sm-7">
+              <label class="switch switch-label switch-pill switch-primary">
+                <input type="checkbox" id="email" class="switch-input"  (click)="emailNotificationSwitch()">
+                <span class="switch-slider" data-checked="✓" data-unchecked="✕"></span>
+              </label>  
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Primary Email Id</strong>
+            <div class="form-group col-sm-7">
+              <input type="email" [readonly]="!emailNotifications" class="form-control" id="userdet.userrole">
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Secondary Email Id</strong>
+            <div class="form-group col-sm-7">
+              <input type="email" [readonly]="!emailNotifications" class="form-control" id="userdet.userrole">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Charge Notification</strong>
+            <div class="form-group col-sm-7">
+              <!-- <input type="checkbox" checked> -->
+              <label class="switch switch-label switch-pill switch-primary">
+                <input type="checkbox" id="charge" class="switch-input"   (click)="chargeNotificationSwitch()">
+                <span class="switch-slider" data-checked="✓" data-unchecked="✕"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Charge Currency</strong>
+            <div class="form-group col-sm-7">
+              <input type="email" [readonly]="!chargeNotificaton" class="form-control" id="userdet.userrole">
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-sm-5">
+          <div class="row">
+            <strong class="form-group col-sm-5">Charge Amount</strong>
+            <div class="form-group col-sm-7">
+              <input type="email" [readonly]="!chargeNotificaton" class="form-control" id="userdet.userrole">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <table class="table table-bordered table-hover table-md z-depth-1">
+            <thead >
+              <tr class="bg-gray">
+                <th colspan="3"> Instant Notification</th>
+              </tr>
+              <tr>
+                <th style="width: 3%"><input type="checkbox" checked></th>
+                <th scope="col" sortable="user"  style="width: 30%">Transaction Type</th>
+                <th scope="col" sortable="name"  style="width: 40%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" checked></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="form-group col-sm-5">
+          <table class="table table-bordered table-hover table-md z-depth-1">
+            <thead >
+              <tr class="bg-gray">
+                <th colspan="3"> Scheduled Notification</th>
+              </tr>
+              <tr>
+                <th style="width: 3%"><input type="checkbox" checked></th>
+                <th scope="col" sortable="user"  style="width: 30%">Transaction Type</th>
+                <th scope="col" sortable="name"  style="width: 40%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="card-footer">
+      <button class="btn btn-success"><strong>Submit</strong></button>
+      <button class="btn btn-danger pull-right" (click)="cancelCustomer()"><strong>Cancel</strong></button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!-- <div class="col-sm" *ngIf="customerDetailBlock">
+  <div class="card">
+    <div class="card-header">
+      <strong id="userdet.header">Customer Managment</strong>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Customer Id</strong>
+            <div class="form-group col-sm-8">
+              <input type="text" class="form-control" id="userdet.userid">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Customer Name</strong>
+            <div class="form-group col-sm-8">
+              <input type="text" class="form-control" id="userdet.username">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Password</strong>
+            <div class="form-group col-sm-8">
+              <input type="password" class="form-control" id="userdet.password">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Re-enter Password</strong>
+            <div class="form-group col-sm-8">
+              <input type="password" class="form-control" id="userdet.reenterpassword">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Email ID</strong>
+            <div class="form-group col-sm-8">
+              <input type="email" class="form-control" id="userdet.email">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Customer Role</strong>
+            <div class="form-group col-sm-8">
+              <input type="email" class="form-control" id="userdet.userrole">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4">
+          <div class="row">
+            <strong class="form-group col-sm-4">Customer Status</strong>
+            <div class="form-group col-sm-6">
+              <select class="form-control" id="userdet.userstatus">
+                <option></option>
+                <option>Lock</option>
+                <option>Close</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-success"><strong>Submit</strong></button>
+      <button class="btn btn-danger pull-right" (click)="cancelCustomer()"><strong>Cancel</strong></button>
+    </div>
+  </div>
+</div> -->

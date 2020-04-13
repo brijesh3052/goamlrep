@@ -1,0 +1,257 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <strong>Generate Bulk Notification</strong>
+        </div>
+        <div class="card-body">
+          <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+            <div class="form-group row ml-1">
+              <strong>Customer Group</strong>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-10">
+                <button class="btn btn-md btn-primary" id="btnAddScreenRole" (click)="addScreenRole()">
+                  <i class="fa fa-plus"></i>
+                  <strong> &nbsp; Add Group </strong>
+                </button>
+              </div>
+              <div class="col-md-2 ">
+                <strong>All</strong>
+                <label class="switch switch-label switch-pill switch-success pull-right">
+                  <input unchecked class="switch-input" id="allswitch" type="checkbox" (click)="selectAll()">
+                  <span class="switch-slider" data-checked="✓" data-unchecked="✕"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <table class="table table-bordered table-hover table-md z-depth-1">
+                <thead class="table-active">
+                  <tr>
+                    <th scope="col" sortable="user" style="width: fit-content">Screen Name</th>
+                    <th scope="col" sortable="role" style="width: 5%">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="userdet.addroleblock" *ngFor="let screenid of listScreenRole; let i = index;">
+                    <td>
+                      <select class="form-control" id="userdet.userstatus" [disabled]="fieldsSwitchButton">
+                        <!-- <option *ngFor="let screenname of listScreenName" value="{{screenname.name}}">
+                          {{screenname.name}}
+                        </option> -->
+                        <option value=""></option>
+                        <option value="all">All</option>
+                        <option value="retail">Retail</option>
+                        <option value="corporate">Corporate</option>
+                      </select>
+                    </td>
+                    <td>
+                      <button [disabled]="fieldsSwitchButton" class="btn btn-md" id="btnDeleteScreenRole"
+                        href="javascript:void(0)" (click)="deleteScreenRole(screenid)">
+                        <i class="fa fa-close"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </form>
+        </div>
+
+
+        <div class="card-body">
+          <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+            <div class="form-group row ml-1">
+              <strong>Branch Code</strong>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-10">
+                <button class="btn btn-md btn-primary" id="btnAddScreenRole" (click)="addScreenRoleForBranch()">
+                  <i class="fa fa-plus"></i>
+                  <strong> &nbsp; Add Group </strong>
+                </button>
+              </div>
+              <div class="col-md-2 ">
+                <strong>All</strong>
+                <label class="switch switch-label switch-pill switch-success pull-right">
+                  <input unchecked class="switch-input" type="checkbox" id="allswitchforbranch"
+                    (click)="selectAllForBranch()">
+                  <span class="switch-slider" data-checked="✓" data-unchecked="✕"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <table class="table table-bordered table-hover table-md z-depth-1">
+                <thead class="table-active">
+                  <tr>
+                    <th scope="col" sortable="user" style="width: fit-content">Screen Name</th>
+                    <th scope="col" sortable="role" style="width: 5%">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="userdet.addroleblock" *ngFor="let screenid of listScreenRoleForBranch; let i = index;">
+                    <td>
+                      <select class="form-control" id="userdet.userstatus" [disabled]="fieldsSwitchButtonForBranch">
+                        <option value=""></option>
+                        <option value="all">All</option>
+                        <option value="001">001</option>
+                        <option value="002">002</option>
+                      </select>
+                    </td>
+                    <td>
+                      <button [disabled]="fieldsSwitchButtonForBranch" class="btn btn-md" id="btnDeleteScreenRole"
+                        href="javascript:void(0)" (click)="deleteScreenRoleForBranch(screenid)">
+                        <i class="fa fa-close"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-2 col-form-label">
+                <strong for="text-input">SMS Message</strong>
+              </div>
+              <div class="col-md-10">
+                <div class="form-group row">
+                  <div class="col-md-4">
+                    <input type="radio" checked>
+                    <!-- </div>
+                  <div class="col-md-3"> -->
+                    <strong>Use Existing Format</strong>
+                  </div>
+                  <div class="col-md-8">
+                    <select id="disabledSelect" class="form-control">
+                      <option value="0">Please select</option>
+                      <option value="1">Option #1</option>
+                      <option value="2">Option #2</option>
+                      <option value="3">Option #3</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-4">
+                    <input type="radio">
+                    <!-- </div>
+                  <div class="col-md-3"> -->
+                    <strong>Use Custom Format</strong>
+                  </div>
+                  <div class="col-md-8">
+                    <textarea id="textarea-input" ng-init="title= 'initvalue'" name="textarea-input" rows="9"
+                      class="form-control" placeholder="Content.."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-2 col-form-label">
+                <strong for="text-input">Email Message</strong>
+              </div>
+              <div class="col-md-10">
+                <div class="form-group row">
+                  <div class="col-md-4">
+                    <input type="radio" checked>
+                    <!-- </div>
+                  <div class="col-md-3"> -->
+                    <strong>Use Existing Format</strong>
+                  </div>
+                  <div class="col-md-8">
+                    <select id="disabledSelect" class="form-control">
+                      <option value="0">Please select</option>
+                      <option value="1">Option #1</option>
+                      <option value="2">Option #2</option>
+                      <option value="3">Option #3</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-4">
+                    <input type="radio">
+                    <!-- </div>
+                  <div class="col-md-4"> -->
+                    <strong>Use Custom Format</strong>
+                  </div>
+                  <div class="col-md-8">
+                    <textarea id="textarea-input" ng-init="title= 'initvalue'" name="textarea-input" rows="9"
+                      class="form-control" placeholder="Content.."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-sm-8">
+                <div class="row">
+                  <div class="form-group col-sm-2">
+                    <strong class="d-flex justify-content-end">Send</strong>
+                  </div>
+                  <div class="form-group col-sm-8">
+                    <label class="container">Once
+                      <input type="radio" checked name="radio">
+                      <span class="checkmark"></span>
+                    </label>
+      
+                    <label class="container">Daily
+                      <input type="radio" name="radio">
+                      <span class="checkmark"></span>
+                    </label>
+      
+                    <label class="container">Weekly
+                      <input type="radio" name="radio">
+                      <span class="checkmark"></span>
+                    </label>
+      
+                    <label class="container">Monthly
+                      <input type="radio" name="radio">
+                      <span class="checkmark"></span>
+                    </label>
+
+                    <label class="container">Yearly
+                      <input type="radio" name="radio">
+                      <span class="checkmark"></span>
+                    </label>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-2 col-form-label">
+                <strong class="pull-right" for="text-input">Start date </strong>
+              </div>
+              <div class=" input-group col-md-6">
+                <input class="form-control" #datepickerFull="bsDatepicker" bsDatepicker formControlName="dateFull"
+                  [bsConfig]="{ dateInputFormat: 'MMMM Do YYYY, h:mm:ss a' }" placement="top">
+                <div class="input-group-append">
+                  <span class="input-group-text"><i class="fa fa-calendar-check-o "></i></span>
+                </div>
+              </div>
+            </div>
+
+
+          </form>
+        </div>
+
+        <div class="card-footer">
+          <button type="submit" class="btn btn-sm btn-primary"> Submit</button>
+          <button type="submit" class="btn btn-sm btn-danger pull-right"> Cancel</button>
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+  <!--/.row-->
+</div>
